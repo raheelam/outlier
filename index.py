@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Load sequence for each subject, returns a list of numpy arrays
-def load_dataset(prefix='./'):
+def load_dataset(prefix='./data/'):
     subjects = []
     directory = prefix
     for name in listdir(directory):
@@ -45,7 +45,7 @@ def scatter_plot_with_outliers(subject, outliers):
         plt.show()
 
 # Scatter plot for the entire subject's data with outliers marked
-def scatter_plot_subject_with_outliers(subject, outliers):
+def scatter_plot_subject_with_outliers(subject, outliers, subjectNumber):
     # Create a scatter plot for the entire subject's data
     plt.figure()
     plt.scatter(range(len(subject)), subject, label='Data Points', color='purple')
@@ -64,7 +64,7 @@ def scatter_plot_subject_with_outliers(subject, outliers):
 
     plt.xlabel('Data Point Index')
     plt.ylabel('Values')
-    plt.title('Scatter Plot for the Entire Subject with Outliers')
+    plt.title(f"Scatter Plot for the Entire Subject({subjectNumber}) with Outliers")
     plt.legend()
     plt.show()
 
@@ -79,14 +79,24 @@ def detect_outliers_isolation_forest(subject):
 subjects = load_dataset()
 print('Loaded %d subjects' % len(subjects))
 
-# Choose a subject to plot
-subject_to_plot = subjects[1]
+def plot_subject_with_outlier(subject, subjectNumber):
+    # Detect outliers using Isolation Forest for the chosen subject
+    outliers = detect_outliers_isolation_forest(subject.reshape(-1, 1))
+    # Create scatter plot for the entire subject with outliers marked
+    scatter_plot_subject_with_outliers(subject.flatten(), outliers, subjectNumber)
 
-# Detect outliers using Isolation Forest for the chosen subject
-outliers = detect_outliers_isolation_forest(subject_to_plot.reshape(-1, 1))
+    # # Create scatter plots for each column with outliers marked
+    # scatter_plot_with_outliers(subject_to_plot, outliers)
 
-# # Create scatter plots for each column with outliers marked
-# scatter_plot_with_outliers(subject_to_plot, outliers)
+   
+def plot_subjects(subjects):
+    count = 1
+    for subject in subjects:
+        plot_subject_with_outlier(subject, count)
+        count +=1
 
-# Create scatter plot for the entire subject with outliers marked
-scatter_plot_subject_with_outliers(subject_to_plot.flatten(), outliers)
+
+plot_subjects(subjects)
+
+
+
