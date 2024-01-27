@@ -58,7 +58,7 @@ def scatter_plot_subject_with_outliers(subject, outliers, subjectNumber):
             np.where(flattened_outliers_mask)[0],  # x values
             subject[flattened_outliers_mask],  # y values
             label='Outliers',
-            color='red',
+            color='green',
             marker='x'
         )
 
